@@ -2,6 +2,7 @@
 #define PRIMITIVE_H
 
 #include "CSGRay.h"
+#include "GeometricOperation.h"
 #include "../Primitivas/cor.h"
 #include <math.h>
 #include <vector>
@@ -23,7 +24,7 @@ public:
 
 	Cor cor;
 
-	virtual vector<EdgeHits> checkIntersection(CSGRay r);
+	virtual vector<EdgeHits> checkIntersection(CSGRay r, vector<GeometricOperation> vGOP);
 };
 
 #endif

@@ -10,10 +10,10 @@ CSGTree::CSGTree(CSGTree* leftChildTree, CSGTree* rightChildTree, booleanOperati
 	this->geoOP = nullptr;
 };
 
-CSGTree::CSGTree(CSGTree* leftChildTree, GeometricOperation* geoOP, booleanOperation operation) {
+CSGTree::CSGTree(CSGTree* leftChildTree, GeometricOperation* geoOP) {
 	this->leftChildTree = leftChildTree;
 	this->rightChildTree = nullptr;
-	this->operation = operation;
+	this->operation = geoOP->operationType;
 	this->isPrimitive = false;
 	this->primitive = nullptr;
 	this->geoOP = geoOP;
@@ -29,15 +29,21 @@ CSGTree::CSGTree(Primitive* primitive) {
 };
 
 
-std::vector<EdgeHits> CSGTree::checkIntersection(CSGRay r) {
+std::vector<EdgeHits> CSGTree::checkIntersection(CSGRay r, vector<GeometricOperation> vGOP) {
 	std::vector<EdgeHits> hits;
 
 	if (this->isPrimitive) {
-		return this->primitive->checkIntersection(r);
+		return this->primitive->checkIntersection(r, vGOP);
 	}
 
-	std::vector<EdgeHits> leftHits = leftChildTree->checkIntersection(r);
-	std::vector<EdgeHits> rightHits = rightChildTree->checkIntersection(r);
+	if (!(this->geoOP == nullptr)) {
+		vGOP.push_back(*this->geoOP);
+		std::vector<EdgeHits> leftHits = leftChildTree->checkIntersection(r, vGOP);
+		return leftHits;
+	}
+	
+	std::vector<EdgeHits> leftHits = leftChildTree->checkIntersection(r, vGOP);
+	std::vector<EdgeHits> rightHits = rightChildTree->checkIntersection(r, vGOP);
 
 
 	if (this->operation == booleanOperation::UNION) {

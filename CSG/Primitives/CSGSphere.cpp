@@ -6,16 +6,32 @@ CSGSphere::CSGSphere(glm::vec3 center, float radius, Cor cor) {
 	this->cor = cor;
 }
 
-vector<EdgeHits> CSGSphere::checkIntersection(CSGRay r) {
+vector<EdgeHits> CSGSphere::checkIntersection(CSGRay r, vector<GeometricOperation> vGOP) {
+
+	glm::vec3 newCenter = this->center;
+	float newRadius = this->radius;
+
+
+	for (int i = vGOP.size() - 1; i >= 0; i--) {
+		if (vGOP[i].operationType == booleanOperation::TRANSLATION) {
+			newCenter.x += vGOP[i].attributes.x;
+			newCenter.y += vGOP[i].attributes.y;
+			newCenter.z += vGOP[i].attributes.z;
+		}
+
+		else if (vGOP[i].operationType == booleanOperation::SCALING) {
+			newRadius *= vGOP[i].attributes.x;
+		}
+	}
 	
 	vector<EdgeHits> hitsVector;
 	
-	glm::vec3 w(r.p0.x - this->center.x, r.p0.y - this->center.y, r.p0.z - this->center.z);
+	glm::vec3 w(r.p0.x - newCenter.x, r.p0.y - newCenter.y, r.p0.z - newCenter.z);
 
 	float delta, t1, t2, tAux;
 	float a = glm::dot(r.dr, r.dr);
 	float b = 2 * glm::dot(w, r.dr);
-	float c = glm::dot(w, w) - this->radius * this->radius;
+	float c = glm::dot(w, w) - newRadius * newRadius;
 
 	delta = b * b - 4 * a * c;
 

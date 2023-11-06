@@ -10,7 +10,7 @@ public:
 	float radius;
 	Cor cor;
 
-	vector<EdgeHits> checkIntersection(CSGRay r);
+	vector<EdgeHits> checkIntersection(CSGRay r, vector<GeometricOperation> vGOP);
 
 	CSGSphere(glm::vec3 center, float radius, Cor cor);
 };

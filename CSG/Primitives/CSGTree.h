@@ -14,10 +14,10 @@ public:
 	GeometricOperation* geoOP;
 
 	CSGTree(CSGTree* leftChildTree, CSGTree* rightChildTree, booleanOperation operation);
-	CSGTree(CSGTree* leftChildTree, GeometricOperation* geoOP, booleanOperation operation);
+	CSGTree(CSGTree* leftChildTree, GeometricOperation* geoOP);
 	CSGTree(Primitive* primitive);
 
-	std::vector<EdgeHits> checkIntersection(CSGRay r);
+	std::vector<EdgeHits> checkIntersection(CSGRay r, vector<GeometricOperation> vGOP);
 };
 
 #endif
